@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,15 +68,41 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+	pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
+    where
+        T: Ord + Copy,
+    {
+        let mut merged = LinkedList::new();
+        let mut p_a = list_a.start;
+        let mut p_b = list_b.start;
+
+        // 当两个链表都有剩余节点时，分别取其中较小的值
+        while let (Some(a_ptr), Some(b_ptr)) = (p_a, p_b) {
+            unsafe {
+                if (*a_ptr.as_ptr()).val <= (*b_ptr.as_ptr()).val {
+                    merged.add((*a_ptr.as_ptr()).val);
+                    p_a = (*a_ptr.as_ptr()).next;
+                } else {
+                    merged.add((*b_ptr.as_ptr()).val);
+                    p_b = (*b_ptr.as_ptr()).next;
+                }
+            }
         }
-	}
+        // 将剩余部分追加到 merged
+        while let Some(a_ptr) = p_a {
+            unsafe {
+                merged.add((*a_ptr.as_ptr()).val);
+                p_a = (*a_ptr.as_ptr()).next;
+            }
+        }
+        while let Some(b_ptr) = p_b {
+            unsafe {
+                merged.add((*b_ptr.as_ptr()).val);
+                p_b = (*b_ptr.as_ptr()).next;
+            }
+        }
+        merged
+    }
 }
 
 impl<T> Display for LinkedList<T>

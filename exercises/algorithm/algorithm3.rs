@@ -3,11 +3,22 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+
+fn sort<T: PartialOrd>(array: &mut [T]) {
+    let len = array.len();
+    // 外层循环：重复 len 次，或者直到没有交换发生为止
+    for i in 0..len {
+        // 内层循环：比较相邻元素，并进行交换
+        // 注意：每完成一次外层循环，最后 i 个元素已排序，可略过
+        for j in 0..(len - 1 - i) {
+            if array[j] > array[j + 1] {
+                array.swap(j, j + 1);
+            }
+        }
+    }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
